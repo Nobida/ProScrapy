@@ -1,0 +1,10 @@
+[
+{"proxy_scheme": "https", "proxy": "https://61.182.88.133:40087"},
+{"proxy_scheme": "https", "proxy": "https://58.216.199.202:49231"},
+{"proxy_scheme": "https", "proxy": "https://211.159.171.58:80"},
+{"proxy_scheme": "http", "proxy": "http://124.193.113.30:47067"},
+{"proxy_scheme": "https", "proxy": "https://60.208.32.201:80"},
+{"proxy_scheme": "http", "proxy": "http://210.72.14.142:80"},
+{"proxy_scheme": "http", "proxy": "http://124.235.181.175:80"},
+{"proxy_scheme": "http", "proxy": "http://118.190.95.43:9001"}
+]
