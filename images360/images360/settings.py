@@ -64,9 +64,10 @@ ROBOTSTXT_OBEY = False
 
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'images360.pipelines.Images360Pipeline': 300,
-#}
+ITEM_PIPELINES = {
+     #'images360.pipelines.Images360Pipeline': 300,
+     'images360.pipelines.MysqlPipeline':400
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
@@ -91,3 +92,8 @@ ROBOTSTXT_OBEY = False
 
 
 MAX_PAGE = 50
+MYSQL_HOST = 'localhost'
+MYSQL_DATABASE = 'scrapy_db'
+MYSQL_PORT = 3306
+MYSQL_USER = 'root'
+MYSQL_PASSWORD = '1234'
