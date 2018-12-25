@@ -1,5 +1,5 @@
 
-## 试题爬虫项目
+## 基于Scrapy的日常爬虫练习
 项目名|网站/app|入口|说明
 ---|---|---|---
 scrapy_91taoke|[91淘课网](http://www.91taoke.com/)|[entrypoint.py](scrapy_91taoke/entrypoint.py)|本项目从91taoke.com爬取所有题目，在进行项目之前，先执行[91taoke_mapping.py](scrapy_91taoke/scrapy_91taoke/spiders/91taoke_mapping.py)爬取url的相关信息，之后直接可使用```python entrypoint.py```执行项目<br>[解析代码](scrapy_91taoke/scrapy_91taoke/parse/scrapy_91taoke_parse.py)<br>[爬取代码](scrapy_91taoke/scrapy_91taoke/spiders/91taoke_spider.py)
