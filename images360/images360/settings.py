@@ -66,7 +66,8 @@ ROBOTSTXT_OBEY = False
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
      #'images360.pipelines.Images360Pipeline': 300,
-     'images360.pipelines.MysqlPipeline':400
+     'images360.pipelines.MysqlPipeline':100,
+     'images360.pipelines.ImagePipeline':99
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -97,3 +98,5 @@ MYSQL_DATABASE = 'scrapy_db'
 MYSQL_PORT = 3306
 MYSQL_USER = 'root'
 MYSQL_PASSWORD = '1234'
+
+IMAGES_STORE = './images'
