@@ -1,0 +1,953 @@
+<!DOCTYPE doctype html>
+<html lang="zh-CN">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="ie=edge" http-equiv="x-ua-compatible"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   vps+Shadowsocks搭建vpn服务器（超简单） – 主机叔
+  </title>
+  <link href="//s.w.org" rel="dns-prefetch"/>
+  <link href="https://www.zhujishu.com/feed" rel="alternate" title="主机叔 » Feed" type="application/rss+xml"/>
+  <link href="https://www.zhujishu.com/comments/feed" rel="alternate" title="主机叔 » 评论Feed" type="application/rss+xml"/>
+  <link href="https://www.zhujishu.com/vpsshadowsocks%e6%90%ad%e5%bb%bavpn%e6%9c%8d%e5%8a%a1%e5%99%a8%ef%bc%88%e8%b6%85%e7%ae%80%e5%8d%95%ef%bc%89.html/feed" rel="alternate" title="主机叔 » vps+Shadowsocks搭建vpn服务器（超简单）评论Feed" type="application/rss+xml"/>
+  <script type="text/javascript">
+   window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/12.0.0-1\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/12.0.0-1\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/www.zhujishu.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=5.4.2"}};
+            /*! This file is auto-generated */
+            !function(e,a,t){var r,n,o,i,p=a.createElement("canvas"),s=p.getContext&&p.getContext("2d");function c(e,t){var a=String.fromCharCode;s.clearRect(0,0,p.width,p.height),s.fillText(a.apply(this,e),0,0);var r=p.toDataURL();return s.clearRect(0,0,p.width,p.height),s.fillText(a.apply(this,t),0,0),r===p.toDataURL()}function l(e){if(!s||!s.fillText)return!1;switch(s.textBaseline="top",s.font="600 32px Arial",e){case"flag":return!c([127987,65039,8205,9895,65039],[127987,65039,8203,9895,65039])&&(!c([55356,56826,55356,56819],[55356,56826,8203,55356,56819])&&!c([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]));case"emoji":return!c([55357,56424,55356,57342,8205,55358,56605,8205,55357,56424,55356,57340],[55357,56424,55356,57342,8203,55358,56605,8203,55357,56424,55356,57340])}return!1}function d(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(i=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},o=0;o<i.length;o++)t.supports[i[o]]=l(i[o]),t.supports.everything=t.supports.everything&&t.supports[i[o]],"flag"!==i[o]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[i[o]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(r=t.source||{}).concatemoji?d(r.concatemoji):r.wpemoji&&r.twemoji&&(d(r.twemoji),d(r.wpemoji)))}(window,document,window._wpemojiSettings);
+  </script>
+  <style type="text/css">
+   img.wp-smiley,
+img.emoji {
+    display: inline !important;
+    border: none !important;
+    box-shadow: none !important;
+    height: 1em !important;
+    width: 1em !important;
+    margin: 0 .07em !important;
+    vertical-align: -0.1em !important;
+    background: none !important;
+    padding: 0 !important;
+}
+  </style>
+  <link href="https://www.zhujishu.com/wp-includes/css/dist/block-library/style.min.css?ver=5.4.2" id="wp-block-library-css" media="all" rel="stylesheet" type="text/css"/>
+  <style id="wp-block-library-inline-css" type="text/css">
+   .has-text-align-justify{text-align:justify;}
+  </style>
+  <link href="https://www.zhujishu.com/wp-content/plugins/tablepress/css/default.min.css?ver=1.11" id="tablepress-default-css" media="all" rel="stylesheet" type="text/css"/>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans%3A300italic%2C400italic%2C600italic%2C300%2C400%2C600&amp;subset=latin%2Clatin-ext&amp;display=fallback&amp;ver=5.4.2" id="open-sans-css" media="all" rel="stylesheet" type="text/css"/>
+  <link href="https://www.zhujishu.com/wp-content/themes/mediumm/dist/styles/main.css" id="mediumm-sage/css-css" media="all" rel="stylesheet" type="text/css"/>
+  <link href="https://www.zhujishu.com/wp-content/plugins/jetpack/_inc/social-logos/social-logos.min.css?ver=8.7" id="social-logos-css" media="all" rel="stylesheet" type="text/css"/>
+  <link href="https://www.zhujishu.com/wp-content/plugins/jetpack/css/jetpack.css?ver=8.7" id="jetpack_css-css" media="all" rel="stylesheet" type="text/css"/>
+  <script src="https://www.zhujishu.com/wp-includes/js/jquery/jquery.js?ver=1.12.4-wp" type="text/javascript">
+  </script>
+  <script src="https://www.zhujishu.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1" type="text/javascript">
+  </script>
+  <script type="text/javascript">
+   /* <![CDATA[ */
+var related_posts_js_options = {"post_heading":"h4"};
+/* ]]> */
+  </script>
+  <script src="https://www.zhujishu.com/wp-content/plugins/jetpack/_inc/build/related-posts/related-posts.min.js?ver=20191011" type="text/javascript">
+  </script>
+  <link href="https://www.zhujishu.com/wp-json/" rel="https://api.w.org/"/>
+  <link href="https://www.zhujishu.com/xmlrpc.php?rsd" rel="EditURI" title="RSD" type="application/rsd+xml"/>
+  <link href="https://www.zhujishu.com/wp-includes/wlwmanifest.xml" rel="wlwmanifest" type="application/wlwmanifest+xml"/>
+  <link href="https://www.zhujishu.com/%e5%88%a9%e7%94%a8%e5%9b%bd%e5%a4%96vps%e6%90%ad%e5%bb%ba%e8%87%aa%e5%b7%b1%e7%9a%84vpn.html" rel="prev" title="利用国外VPS搭建自己的VPN"/>
+  <link href="https://www.zhujishu.com/%e5%9b%bd%e5%a4%96%e4%bc%98%e8%b4%a8vpn%e6%8e%a8%e8%8d%90-2018%e4%b8%ad%e5%9b%bd%e5%9b%bd%e5%86%85%e5%ae%9e%e6%b5%8b.html" rel="next" title="国外优质VPN推荐 2018中国国内实测"/>
+  <meta content="WordPress 5.4.2" name="generator">
+   <link href="https://www.zhujishu.com/vpsshadowsocks%e6%90%ad%e5%bb%bavpn%e6%9c%8d%e5%8a%a1%e5%99%a8%ef%bc%88%e8%b6%85%e7%ae%80%e5%8d%95%ef%bc%89.html" rel="canonical"/>
+   <link href="https://www.zhujishu.com/?p=150" rel="shortlink"/>
+   <link href="https://www.zhujishu.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.zhujishu.com%2Fvpsshadowsocks%25e6%2590%25ad%25e5%25bb%25bavpn%25e6%259c%258d%25e5%258a%25a1%25e5%2599%25a8%25ef%25bc%2588%25e8%25b6%2585%25e7%25ae%2580%25e5%258d%2595%25ef%25bc%2589.html" rel="alternate" type="application/json+oembed"/>
+   <link href="https://www.zhujishu.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.zhujishu.com%2Fvpsshadowsocks%25e6%2590%25ad%25e5%25bb%25bavpn%25e6%259c%258d%25e5%258a%25a1%25e5%2599%25a8%25ef%25bc%2588%25e8%25b6%2585%25e7%25ae%2580%25e5%258d%2595%25ef%25bc%2589.html&amp;format=xml" rel="alternate" type="text/xml+oembed"/>
+   <meta content="Site Kit by Google 1.11.0" name="generator">
+    <link href="//jetpack.wordpress.com" rel="dns-prefetch"/>
+    <link href="//s0.wp.com" rel="dns-prefetch"/>
+    <link href="//s1.wp.com" rel="dns-prefetch"/>
+    <link href="//s2.wp.com" rel="dns-prefetch"/>
+    <link href="//public-api.wordpress.com" rel="dns-prefetch"/>
+    <link href="//0.gravatar.com" rel="dns-prefetch"/>
+    <link href="//1.gravatar.com" rel="dns-prefetch"/>
+    <link href="//2.gravatar.com" rel="dns-prefetch"/>
+    <link href="//widgets.wp.com" rel="dns-prefetch"/>
+    <style type="text/css">
+     img#wpstats{display:none}
+    </style>
+    <!-- Jetpack Open Graph Tags -->
+    <meta content="article" property="og:type">
+     <meta content="vps+Shadowsocks搭建vpn服务器（超简单）" property="og:title"/>
+     <meta content="https://www.zhujishu.com/vpsshadowsocks%e6%90%ad%e5%bb%bavpn%e6%9c%8d%e5%8a%a1%e5%99%a8%ef%bc%88%e8%b6%85%e7%ae%80%e5%8d%95%ef%bc%89.html" property="og:url"/>
+     <meta content="注意：文章内容更新于2020 年3 月 14 号，其中某些内容已经变动，有问题可以在文末留言。 在还没自行搭建…" property="og:description"/>
+     <meta content="2018-01-26T02:35:24+00:00" property="article:published_time"/>
+     <meta content="2020-04-24T12:01:07+00:00" property="article:modified_time"/>
+     <meta content="主机叔" property="og:site_name"/>
+     <meta content="https://www.zhujishu.com/wp-content/uploads/2018/01/æ¬ç¦å·¥vps-åå°.png" property="og:image"/>
+     <meta content="2650" property="og:image:width"/>
+     <meta content="1106" property="og:image:height"/>
+     <meta content="æ¬ç¦å·¥2" property="og:image:alt"/>
+     <meta content="zh_CN" property="og:locale"/>
+     <meta content="vps+Shadowsocks搭建vpn服务器（超简单）" name="twitter:text:title"/>
+     <meta content="https://www.zhujishu.com/wp-content/uploads/2018/01/æ¬ç¦å·¥vpsæ­å»ºss.png?w=640" name="twitter:image"/>
+     <meta content="summary_large_image" name="twitter:card"/>
+     <!-- End Jetpack Open Graph Tags -->
+     <link href="https://www.zhujishu.com/wp-content/uploads/2019/01/主-1-65x65.png" rel="icon" sizes="32x32"/>
+     <link href="https://www.zhujishu.com/wp-content/uploads/2019/01/主-1.png" rel="icon" sizes="192x192"/>
+     <link href="https://www.zhujishu.com/wp-content/uploads/2019/01/主-1.png" rel="apple-touch-icon"/>
+     <meta content="https://www.zhujishu.com/wp-content/uploads/2019/01/主-1.png" name="msapplication-TileImage"/>
+    </meta>
+   </meta>
+  </meta>
+ </head>
+ <body class="post-template-default single single-post postid-150 single-format-standard vpsshadowsocks%e6%90%ad%e5%bb%bavpn%e6%9c%8d%e5%8a%a1%e5%99%a8%ef%bc%88%e8%b6%85%e7%ae%80%e5%8d%95%ef%bc%89.html">
+  <!--[if IE]>
+<div class="alert alert-warning">
+  You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your
+  browser</a> to improve your experience.</div>
+<![endif]-->
+  <style>
+  </style>
+  <header class="header">
+   <div class="container">
+    <div class="row">
+     <div class="top">
+      <div class="site-title col-md-8">
+       <a href="https://www.zhujishu.com/">
+        主机叔
+       </a>
+      </div>
+      <div class="search-form-nostyle col-md-4 hidden-xs hidden-sm">
+       <form action="https://www.zhujishu.com/" class="search-form" method="get" role="search">
+        <label>
+         <span class="screen-reader-text">
+          搜索：
+         </span>
+         <input class="search-field" name="s" placeholder="搜索…" type="search" value=""/>
+        </label>
+        <input class="search-submit" type="submit" value="搜索"/>
+       </form>
+      </div>
+     </div>
+     <nav class="nav-primary hidden-xs">
+      <div class="menu-%e5%af%bc%e8%88%aa-container">
+       <ul class="nav" id="menu-%e5%af%bc%e8%88%aa">
+        <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-36" id="menu-item-36">
+         <a href="https://www.zhujishu.com/">
+          首页
+         </a>
+        </li>
+        <li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-162" id="menu-item-162">
+         <a href="https://www.zhujishu.com/category/vpn">
+          VPN
+         </a>
+        </li>
+        <li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-680" id="menu-item-680">
+         <a href="https://www.zhujishu.com/category/digital-ocean">
+          Digital Ocean
+         </a>
+        </li>
+        <li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-681" id="menu-item-681">
+         <a href="https://www.zhujishu.com/category/vultr">
+          Vultr
+         </a>
+        </li>
+        <li class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-682" id="menu-item-682">
+         <a href="https://www.zhujishu.com/category/bandwagon">
+          搬瓦工
+         </a>
+        </li>
+        <li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-370" id="menu-item-370">
+         <a href="https://www.zhujishu.com/category/others">
+          其他
+         </a>
+        </li>
+       </ul>
+      </div>
+     </nav>
+     <nav class="nav-primary-mobile visible-xs">
+      <button class="mobile-menu-btn">
+       Menu
+      </button>
+      <div class="menu-%e5%af%bc%e8%88%aa-container">
+       <ul class="nav" id="menu-%e5%af%bc%e8%88%aa-1">
+        <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-36">
+         <a href="https://www.zhujishu.com/">
+          首页
+         </a>
+        </li>
+        <li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-162">
+         <a href="https://www.zhujishu.com/category/vpn">
+          VPN
+         </a>
+        </li>
+        <li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-680">
+         <a href="https://www.zhujishu.com/category/digital-ocean">
+          Digital Ocean
+         </a>
+        </li>
+        <li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-681">
+         <a href="https://www.zhujishu.com/category/vultr">
+          Vultr
+         </a>
+        </li>
+        <li class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-682">
+         <a href="https://www.zhujishu.com/category/bandwagon">
+          搬瓦工
+         </a>
+        </li>
+        <li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-370">
+         <a href="https://www.zhujishu.com/category/others">
+          其他
+         </a>
+        </li>
+       </ul>
+      </div>
+     </nav>
+    </div>
+   </div>
+  </header>
+  <div class="wrap" role="document">
+   <div class="container">
+    <div class="content row">
+     <main class="main">
+      <article class="post-150 post type-post status-publish format-standard hentry category-bandwagon tag-bandwagon">
+       <header>
+        <div class="article-author">
+         <div class="avatar" style="background-image: url('https://secure.gravatar.com/avatar/cfec87dc4e81d45431db519f280a649e?s=96&amp;d=blank&amp;r=g');">
+         </div>
+         <div class="meta">
+          <div class="top">
+           <a class="fn" href="https://www.zhujishu.com/author/zhujishu" rel="author">
+            zhujishu
+           </a>
+          </div>
+          <div class="bottom">
+           <time class="created" datetime="2018-01-26T02:35:24+00:00">
+            1月 26, 2018
+           </time>
+           <span class="split">
+           </span>
+           4 min read
+          </div>
+         </div>
+        </div>
+       </header>
+       <div class="inner-entry">
+        <h1 class="title">
+         vps+Shadowsocks搭建vpn服务器（超简单）
+        </h1>
+        <div class="summary">
+         <div>
+          <p>
+           <em>
+            注意：文章内容更新于2020 年3 月 14 号，其中某些内容已经变动，有问题可以在文末留言。
+           </em>
+          </p>
+          <p>
+           在还没自行搭建VPN之前，我都是使用更改hosts文件方法，科学上网。但最近因为领导开大会，这个方法已毫无起色了。于是就有了搭建VPN的想法，这样主要有以下几种好处：
+          </p>
+          <ol>
+           <li>
+            速度可以根据自己使用需求购买配置
+           </li>
+           <li>
+            价格会比购买第三方便宜
+           </li>
+           <li>
+            不限同时登陆设备数
+           </li>
+          </ol>
+          <p>
+           此技术原理是通过在国外搭建服务器，本地连接国外的服务器进行上网，具体的细节恕在下
+           <strong>
+            <em>
+             无可奉告
+            </em>
+           </strong>
+           ！我此次搭建是通过vps+Shadowsocks，这种方法主要是比较简单，真的很简单。
+          </p>
+          <h4>
+           购买VPS
+          </h4>
+          <ol>
+           <li>
+            <h5>
+             使用
+             <strong>
+              搬瓦工
+             </strong>
+             vps
+            </h5>
+           </li>
+          </ol>
+          <p>
+           搬瓦工网址传送门：
+           <a href="https://www.zhujishu.com/go/bandwagon" rel="noopener noreferrer" target="_blank">
+            https://www.zhujishu.com/go/bandwagon
+           </a>
+          </p>
+          <p>
+           这个vps主要是可以支付宝支付，比较方便。
+          </p>
+          <div class="image-package">
+           <div class="image-container">
+            <div class="image-container-fill">
+            </div>
+            <div class="image-view" data-height="972" data-width="2004">
+             <img alt="" class="aligncenter size-full wp-image-674" height="1332" sizes="(max-width: 2165px) 100vw, 2165px" src="https://www.zhujishu.com/wp-content/uploads/2018/01/搬瓦工vps搭建ss.png" srcset="https://www.zhujishu.com/wp-content/uploads/2018/01/搬瓦工vps搭建ss.png 2165w, https://www.zhujishu.com/wp-content/uploads/2018/01/搬瓦工vps搭建ss-300x185.png 300w, https://www.zhujishu.com/wp-content/uploads/2018/01/搬瓦工vps搭建ss-1024x630.png 1024w, https://www.zhujishu.com/wp-content/uploads/2018/01/搬瓦工vps搭建ss-768x473.png 768w, https://www.zhujishu.com/wp-content/uploads/2018/01/搬瓦工vps搭建ss-1536x945.png 1536w, https://www.zhujishu.com/wp-content/uploads/2018/01/搬瓦工vps搭建ss-2048x1260.png 2048w" width="2165"/>
+            </div>
+           </div>
+           <div class="image-caption">
+           </div>
+          </div>
+          <ol start="2">
+           <li>
+            <h5>
+             选择vps 配置
+            </h5>
+           </li>
+          </ol>
+          <p>
+           之前还有
+           <strong>
+            $2.99
+           </strong>
+           美元一个月的，现在便宜的VPS 套餐应该是卖光了，我选择
+           <strong>
+            $19.99美元/年
+           </strong>
+           的套餐，根据当前支付宝提供的汇率折合人民币128元左右，这个10G的配置够三四人使用了。
+          </p>
+          <p>
+           搬瓦工目前有GIA CN2 线路，比一般VPS线路更加稳定，高峰期也不拥挤，缺点是价格昂贵，限时促销，购买地址在这：
+           <a href="https://www.zhujishu.com/%e6%90%ac%e7%93%a6%e5%b7%a5-gia-cn2-%e5%8f%88%e8%a1%a5%e8%b4%a7%e4%ba%86%ef%bc%8c%e5%b9%b4%e4%bb%98169-99-usd.html" rel="noopener noreferrer" target="_blank">
+            搬瓦工 CN2 GIA ECOMMERCE 年付169.99 USD
+           </a>
+          </p>
+          <div class="image-package">
+           <div class="image-container">
+            <div class="image-container-fill">
+             <img alt="搬瓦工购买" class="aligncenter size-full wp-image-96" height="712" sizes="(max-width: 950px) 100vw, 950px" src="https://www.zhujishu.com/wp-content/uploads/2017/11/6.jpg" srcset="https://www.zhujishu.com/wp-content/uploads/2017/11/6.jpg 950w, https://www.zhujishu.com/wp-content/uploads/2017/11/6-300x225.jpg 300w, https://www.zhujishu.com/wp-content/uploads/2017/11/6-768x576.jpg 768w, https://www.zhujishu.com/wp-content/uploads/2017/11/6-660x495.jpg 660w" width="950"/>
+            </div>
+            <div class="image-view" data-height="1416" data-width="2006">
+            </div>
+           </div>
+           <div class="image-caption">
+           </div>
+          </div>
+          <p>
+           选择KVM，KVM是完全虚拟的虚拟机，内存不共享，还可以装docker
+          </p>
+          <div class="image-package">
+           <div class="image-caption">
+           </div>
+          </div>
+          <p>
+           确认信息，嗯，价格没错，服务器地址选择的是默认的，确认添加购物车
+          </p>
+          <div class="image-package">
+           <div class="image-container">
+            <div class="image-container-fill">
+            </div>
+           </div>
+           <div class="image-caption">
+           </div>
+          </div>
+          <ol start="3">
+           <li>
+            <h5>
+             填写信息
+            </h5>
+           </li>
+          </ol>
+          <p>
+           点击Checkout
+          </p>
+          <div class="image-package">
+           <div class="image-container">
+            <div class="image-container-fill">
+            </div>
+            <div class="image-view" data-height="748" data-width="1968">
+             <img alt="搬瓦工2" class="aligncenter size-full wp-image-85" height="397" sizes="(max-width: 1024px) 100vw, 1024px" src="https://www.zhujishu.com/wp-content/uploads/2017/11/搬瓦工2.jpg" srcset="https://www.zhujishu.com/wp-content/uploads/2017/11/搬瓦工2.jpg 1024w, https://www.zhujishu.com/wp-content/uploads/2017/11/搬瓦工2-300x116.jpg 300w, https://www.zhujishu.com/wp-content/uploads/2017/11/搬瓦工2-768x298.jpg 768w, https://www.zhujishu.com/wp-content/uploads/2017/11/搬瓦工2-660x256.jpg 660w" width="1024"/>
+            </div>
+           </div>
+          </div>
+          <p>
+           到填写信息页面，我所填输入栏的信息都要填，主要是
+           <strong>
+            邮箱比较重要
+           </strong>
+           ，要填写
+           <strong>
+            常用的邮箱
+           </strong>
+           ，支付选择
+           <strong>
+            Alipay
+           </strong>
+           支付宝支付，还要勾选同意协议，然后点击下方完成订单按钮
+          </p>
+          <div class="image-package">
+           <div class="image-container">
+            <div class="image-container-fill">
+            </div>
+           </div>
+           <div class="image-caption">
+           </div>
+          </div>
+          <ol start="5">
+           <li>
+            <h5>
+             支付宝支付
+            </h5>
+            <p>
+             确认价格后点击
+             <strong>
+              Pay now
+             </strong>
+             ，进行支付宝支付（不用我教了吧）
+            </p>
+            <div class="image-package">
+             <div class="image-container">
+              <div class="image-container-fill">
+              </div>
+              <div class="image-view" data-height="1162" data-width="1248">
+               <img alt="" class="aligncenter size-full wp-image-87" height="459" sizes="(max-width: 1024px) 100vw, 1024px" src="https://www.zhujishu.com/wp-content/uploads/2017/11/bandwagon10-1024x459.jpg" srcset="https://www.zhujishu.com/wp-content/uploads/2017/11/bandwagon10-1024x459.jpg 1024w, https://www.zhujishu.com/wp-content/uploads/2017/11/bandwagon10-1024x459-300x134.jpg 300w, https://www.zhujishu.com/wp-content/uploads/2017/11/bandwagon10-1024x459-768x344.jpg 768w, https://www.zhujishu.com/wp-content/uploads/2017/11/bandwagon10-1024x459-660x296.jpg 660w" width="1024"/>
+              </div>
+             </div>
+             <div class="image-caption">
+             </div>
+            </div>
+           </li>
+           <li>
+            <h5>
+             配置服务器信息
+            </h5>
+            <p>
+             支付完成后返回首页点击ClientArea，再点击Services-My Services
+            </p>
+            <div class="image-package">
+             <div class="image-container">
+              <div class="image-container-fill">
+              </div>
+              <div class="image-view" data-height="944" data-width="2024">
+              </div>
+             </div>
+             <div class="image-caption">
+             </div>
+            </div>
+            <div class="image-package">
+             <div class="image-caption">
+              <img alt="" class="aligncenter size-full wp-image-88" height="179" sizes="(max-width: 1024px) 100vw, 1024px" src="https://www.zhujishu.com/wp-content/uploads/2017/11/9-1024x179.jpg" srcset="https://www.zhujishu.com/wp-content/uploads/2017/11/9-1024x179.jpg 1024w, https://www.zhujishu.com/wp-content/uploads/2017/11/9-1024x179-300x52.jpg 300w, https://www.zhujishu.com/wp-content/uploads/2017/11/9-1024x179-768x134.jpg 768w, https://www.zhujishu.com/wp-content/uploads/2017/11/9-1024x179-660x115.jpg 660w" width="1024"/>
+             </div>
+            </div>
+           </li>
+          </ol>
+          <p>
+           点击KiwiVM Control Panel进行VPS 后台面板，
+          </p>
+          <p>
+           在
+           <strong>
+            MainControls
+           </strong>
+           可以看到IP地址信息
+          </p>
+          <p>
+           <del>
+            安装系统到服务器和生成Shadowsocks Server信息
+            <br/>
+            在
+            <strong>
+             Shadowsocks Server
+            </strong>
+            可以看到加密方式、端口、和密码
+           </del>
+          </p>
+          <div class="image-package">
+           <div class="image-container">
+            <div>
+             <img alt="" class="aligncenter size-full wp-image-675" height="1106" sizes="(max-width: 2650px) 100vw, 2650px" src="https://www.zhujishu.com/wp-content/uploads/2018/01/搬瓦工vps-后台.png" srcset="https://www.zhujishu.com/wp-content/uploads/2018/01/搬瓦工vps-后台.png 2650w, https://www.zhujishu.com/wp-content/uploads/2018/01/搬瓦工vps-后台-300x125.png 300w, https://www.zhujishu.com/wp-content/uploads/2018/01/搬瓦工vps-后台-1024x427.png 1024w, https://www.zhujishu.com/wp-content/uploads/2018/01/搬瓦工vps-后台-768x321.png 768w, https://www.zhujishu.com/wp-content/uploads/2018/01/搬瓦工vps-后台-1536x641.png 1536w, https://www.zhujishu.com/wp-content/uploads/2018/01/搬瓦工vps-后台-2048x855.png 2048w" width="2650"/>
+            </div>
+            <div>
+            </div>
+            <div class="image-container-fill">
+             搬瓦工VPS 现在后台不再提供一键搭建Shadowsocks 服务，不过可以使用一键脚本自己搭建，附一个教程地址：
+             <a href="https://jimubiedao.com/63" rel="noopener noreferrer" target="_blank">
+              https://jimubiedao.com/63
+             </a>
+            </div>
+            <blockquote>
+             <div>
+              不想折腾的同学建议直接购买搬瓦工官方出品的SS服务，传送门：
+              <a href="https://www.zhujishu.com/go/jus-my-socks" rel="noopener noreferrer" target="_blank">
+               Just My Socks
+              </a>
+             </div>
+             <div>
+              个人建议动手能力不强的直接购买这个，省去很多烦恼。Just My Socks价格之前最低2.88美元/月，现在最低套餐售罄了，只有 5.88美元/月的套餐，性价比没有那么高，不过因为套餐贵流量也多，可以和朋友合租均摊成本。
+             </div>
+             <div>
+              Just My Socks 教程地址：
+              <a href="https://www.zhujishu.com/2020-%e7%a7%91%e5%ad%a6%e4%b8%8a%e7%bd%91%e6%96%b0%e5%a7%bf%e5%8a%bf-%e6%90%ac%e7%93%a6%e5%b7%a5%e5%ae%98%e6%96%b9ss-%e6%9c%ba%e5%9c%ba-just-my-socks-%e4%bd%bf%e7%94%a8%e6%95%99%e7%a8%8b.html" rel="noopener noreferrer" target="_blank">
+               2020 科学上网新姿势 搬瓦工官方SS 机场 Just My Socks 使用教程
+              </a>
+             </div>
+            </blockquote>
+            <div>
+             搭建好之后，需要在本地客户端上安装相应软件。
+            </div>
+            <div class="image-view" data-height="1194" data-width="1850">
+            </div>
+           </div>
+          </div>
+          <h4>
+           安装Shadowsocks
+          </h4>
+          <ul>
+           <li>
+            <a href="https://github.com/shadowsocks/shadowsocks-windows/releases" rel="nofollow noopener noreferrer" target="_blank">
+             Windows客户端
+            </a>
+            <div class="image-package">
+             <div class="image-caption">
+             </div>
+            </div>
+           </li>
+           <li>
+            <a href="https://github.com/shadowsocks/ShadowsocksX-NG/releases/" rel="nofollow noopener noreferrer" target="_blank">
+             Mac OS X客户端
+            </a>
+            <div class="image-package">
+             <div class="image-caption">
+             </div>
+            </div>
+            <div class="image-package">
+             <div class="image-caption">
+             </div>
+            </div>
+           </li>
+           <li>
+            Linux客户端
+           </li>
+          </ul>
+          <pre class="hljs bash"><code class="bash"> sudo dnf copr <span class="hljs-built_in">enable</span> librehat/shadowsocks
+ sudo dnf update
+ sudo dnf install shadowsocks-qt5 
+</code></pre>
+          <ul>
+           <li>
+            <a href="https://github.com/shadowsocks/shadowsocks-android" rel="nofollow noopener noreferrer" target="_blank">
+             Android客户端
+            </a>
+            <div class="image-package">
+             <div class="image-caption">
+             </div>
+            </div>
+           </li>
+           <li>
+            iOS客户端
+            <br/>
+            iPhone 用户安装第三方app，建议安装 shadowrocket（2.99美元） 或者quantumult X（4.99美元），付费软件，简单易上手；如果动手能力比较强，建议使用surge。
+           </li>
+          </ul>
+          <p>
+           填写配置好的
+           <strong>
+            IP地址、加密方式、端口、和密码
+           </strong>
+           ，点击完成，
+           <strong>
+            再启动
+           </strong>
+           ，选择刚才添加的服务器，然后就可以愉快的上网啦！
+          </p>
+          <p>
+           <a href="https://www.google.com/" rel="nofollow noopener noreferrer" target="_blank">
+            -&gt;测试是否成功&lt;-
+           </a>
+          </p>
+          <blockquote>
+           <p>
+            这一趟亲力亲为后才觉得自己搭建VPN也没想象中的那么难嘛~，凡是遇到的困难一定不要放弃，因为在你成功后的那一刻，才觉得自己不是傻瓜。在而后的某一天，你站在风口上， 惊讶的发现自己飞起来了
+           </p>
+          </blockquote>
+         </div>
+         <pre></pre>
+         <div class="sharedaddy sd-sharing-enabled">
+          <div class="robots-nocontent sd-block sd-social sd-social-icon-text sd-sharing">
+           <h3 class="sd-title">
+            共享此文章：
+           </h3>
+           <div class="sd-content">
+            <ul>
+             <li class="share-twitter">
+              <a class="share-twitter sd-button share-icon" data-shared="sharing-twitter-150" href="https://www.zhujishu.com/vpsshadowsocks%e6%90%ad%e5%bb%bavpn%e6%9c%8d%e5%8a%a1%e5%99%a8%ef%bc%88%e8%b6%85%e7%ae%80%e5%8d%95%ef%bc%89.html?share=twitter" rel="nofollow noopener noreferrer" target="_blank" title="点击以在 Twitter 上共享">
+               <span>
+                Twitter
+               </span>
+              </a>
+             </li>
+             <li class="share-facebook">
+              <a class="share-facebook sd-button share-icon" data-shared="sharing-facebook-150" href="https://www.zhujishu.com/vpsshadowsocks%e6%90%ad%e5%bb%bavpn%e6%9c%8d%e5%8a%a1%e5%99%a8%ef%bc%88%e8%b6%85%e7%ae%80%e5%8d%95%ef%bc%89.html?share=facebook" rel="nofollow noopener noreferrer" target="_blank" title="点击以在 Facebook 上共享">
+               <span>
+                Facebook
+               </span>
+              </a>
+             </li>
+             <li class="share-end">
+             </li>
+            </ul>
+           </div>
+          </div>
+         </div>
+         <div class="jp-relatedposts" id="jp-relatedposts">
+          <h3 class="jp-relatedposts-headline">
+           <em>
+            相关
+           </em>
+          </h3>
+         </div>
+        </div>
+       </div>
+       <div class="post-tags">
+        <a class="tag-link-17" href="https://www.zhujishu.com/tag/bandwagon" title="">
+         搬瓦工
+        </a>
+       </div>
+       <footer>
+       </footer>
+       <section class="comments" id="comments">
+        <h2>
+         2 responses to “
+         <span>
+          vps+Shadowsocks搭建vpn服务器（超简单）
+         </span>
+         ”
+        </h2>
+        <ol class="comment-list">
+         <li class="comment even thread-even depth-1 parent" id="comment-417">
+          <article class="comment-body" id="div-comment-417">
+           <footer class="comment-meta">
+            <div class="comment-author vcard">
+             <img alt="" class="avatar avatar-32 photo" height="32" src="https://secure.gravatar.com/avatar/d8badb5135b91cc31ea0234f5718e8bb?s=32&amp;d=blank&amp;r=g" srcset="https://secure.gravatar.com/avatar/d8badb5135b91cc31ea0234f5718e8bb?s=64&amp;d=blank&amp;r=g 2x" width="32"/>
+             <b class="fn">
+              伏明霞
+             </b>
+             <span class="says">
+              说道：
+             </span>
+            </div>
+            <!-- .comment-author -->
+            <div class="comment-metadata">
+             <a href="https://www.zhujishu.com/vpsshadowsocks%e6%90%ad%e5%bb%bavpn%e6%9c%8d%e5%8a%a1%e5%99%a8%ef%bc%88%e8%b6%85%e7%ae%80%e5%8d%95%ef%bc%89.html#comment-417">
+              <time datetime="2020-05-26T17:45:23+08:00">
+               2020年5月26日 下午5:45
+              </time>
+             </a>
+            </div>
+            <!-- .comment-metadata -->
+           </footer>
+           <!-- .comment-meta -->
+           <div class="comment-content">
+            <p>
+             网站明明写着$19.99/month，被你说成1年。。。
+            </p>
+            <div class="jetpack-comment-likes-widget-wrapper jetpack-likes-widget-unloaded" data-name="like-comment-frame-173833033-417-5f0ab8989c48d" data-src="https://widgets.wp.com/likes/#blog_id=173833033&amp;comment_id=417&amp;origin=www.zhujishu.com&amp;obj_id=173833033-417-5f0ab8989c48d" id="like-comment-wrapper-173833033-417-5f0ab8989c48d">
+             <div class="likes-widget-placeholder comment-likes-widget-placeholder comment-likes">
+              <span class="loading">
+               正在加载……
+              </span>
+             </div>
+             <div class="comment-likes-widget jetpack-likes-widget comment-likes">
+              <span class="comment-like-feedback">
+              </span>
+              <span class="sd-text-color">
+              </span>
+              <a class="sd-link-color">
+              </a>
+             </div>
+            </div>
+           </div>
+           <!-- .comment-content -->
+           <div class="reply">
+            <a aria-label="回复给伏明霞" class="comment-reply-link" data-belowelement="div-comment-417" data-commentid="417" data-postid="150" data-respondelement="respond" href="https://www.zhujishu.com/vpsshadowsocks%e6%90%ad%e5%bb%bavpn%e6%9c%8d%e5%8a%a1%e5%99%a8%ef%bc%88%e8%b6%85%e7%ae%80%e5%8d%95%ef%bc%89.html?replytocom=417#respond" rel="nofollow">
+             回复
+            </a>
+           </div>
+          </article>
+          <!-- .comment-body -->
+          <ol class="children">
+           <li class="comment byuser comment-author-zhujishu bypostauthor odd alt depth-2" id="comment-418">
+            <article class="comment-body" id="div-comment-418">
+             <footer class="comment-meta">
+              <div class="comment-author vcard">
+               <img alt="" class="avatar avatar-32 photo" height="32" src="https://secure.gravatar.com/avatar/cfec87dc4e81d45431db519f280a649e?s=32&amp;d=blank&amp;r=g" srcset="https://secure.gravatar.com/avatar/cfec87dc4e81d45431db519f280a649e?s=64&amp;d=blank&amp;r=g 2x" width="32"/>
+               <b class="fn">
+                zhujishu
+               </b>
+               <span class="says">
+                说道：
+               </span>
+              </div>
+              <!-- .comment-author -->
+              <div class="comment-metadata">
+               <a href="https://www.zhujishu.com/vpsshadowsocks%e6%90%ad%e5%bb%bavpn%e6%9c%8d%e5%8a%a1%e5%99%a8%ef%bc%88%e8%b6%85%e7%ae%80%e5%8d%95%ef%bc%89.html#comment-418">
+                <time datetime="2020-05-27T15:47:50+08:00">
+                 2020年5月27日 下午3:47
+                </time>
+               </a>
+              </div>
+              <!-- .comment-metadata -->
+             </footer>
+             <!-- .comment-meta -->
+             <div class="comment-content">
+              <p>
+               $19.99一年的套餐在2018年的时候已经售罄了，传家宝系列。目前比较有性价比的就是49刀一年的CN2了。
+              </p>
+              <div class="jetpack-comment-likes-widget-wrapper jetpack-likes-widget-unloaded" data-name="like-comment-frame-173833033-418-5f0ab8989c803" data-src="https://widgets.wp.com/likes/#blog_id=173833033&amp;comment_id=418&amp;origin=www.zhujishu.com&amp;obj_id=173833033-418-5f0ab8989c803" id="like-comment-wrapper-173833033-418-5f0ab8989c803">
+               <div class="likes-widget-placeholder comment-likes-widget-placeholder comment-likes">
+                <span class="loading">
+                 正在加载……
+                </span>
+               </div>
+               <div class="comment-likes-widget jetpack-likes-widget comment-likes">
+                <span class="comment-like-feedback">
+                </span>
+                <span class="sd-text-color">
+                </span>
+                <a class="sd-link-color">
+                </a>
+               </div>
+              </div>
+             </div>
+             <!-- .comment-content -->
+             <div class="reply">
+              <a aria-label="回复给zhujishu" class="comment-reply-link" data-belowelement="div-comment-418" data-commentid="418" data-postid="150" data-respondelement="respond" href="https://www.zhujishu.com/vpsshadowsocks%e6%90%ad%e5%bb%bavpn%e6%9c%8d%e5%8a%a1%e5%99%a8%ef%bc%88%e8%b6%85%e7%ae%80%e5%8d%95%ef%bc%89.html?replytocom=418#respond" rel="nofollow">
+               回复
+              </a>
+             </div>
+            </article>
+            <!-- .comment-body -->
+           </li>
+           <!-- #comment-## -->
+          </ol>
+          <!-- .children -->
+         </li>
+         <!-- #comment-## -->
+        </ol>
+        <div class="comment-respond" id="respond">
+         <h3 class="comment-reply-title" id="reply-title">
+          发表评论
+          <small>
+           <a href="/vpsshadowsocks%E6%90%AD%E5%BB%BAvpn%E6%9C%8D%E5%8A%A1%E5%99%A8%EF%BC%88%E8%B6%85%E7%AE%80%E5%8D%95%EF%BC%89.html#respond" id="cancel-comment-reply-link" rel="nofollow" style="display:none;">
+            取消回复
+           </a>
+          </small>
+         </h3>
+         <form class="comment-form" id="commentform">
+          <iframe class="jetpack_remote_comment" id="jetpack_remote_comment" name="jetpack_remote_comment" sandbox="allow-same-origin allow-top-navigation allow-scripts allow-forms allow-popups" src="https://jetpack.wordpress.com/jetpack-comment/?blogid=173833033&amp;postid=150&amp;comment_registration=0&amp;require_name_email=1&amp;stc_enabled=0&amp;stb_enabled=0&amp;show_avatars=1&amp;avatar_default=blank&amp;greeting=%E5%8F%91%E8%A1%A8%E8%AF%84%E8%AE%BA&amp;greeting_reply=%E4%B8%BA+%25s+%E5%8F%91%E8%A1%A8%E8%AF%84%E8%AE%BA&amp;color_scheme=light&amp;lang=zh_CN&amp;jetpack_version=8.7&amp;show_cookie_consent=10&amp;has_cookie_consent=0&amp;token_key=%3Bnormal%3B&amp;sig=c463ad6b3ec5e8510c5ecdf61b791ddddf67ae79#parent=https%3A%2F%2Fwww.zhujishu.com%2Fvpsshadowsocks%25E6%2590%25AD%25E5%25BB%25BAvpn%25E6%259C%258D%25E5%258A%25A1%25E5%2599%25A8%25EF%25BC%2588%25E8%25B6%2585%25E7%25AE%2580%25E5%258D%2595%25EF%25BC%2589.html" style="width:100%; height: 430px; border:0;" title="评论表单">
+          </iframe>
+          <!--[if !IE]><!-->
+          <script>
+           document.addEventListener('DOMContentLoaded', function () {
+                            var commentForms = document.getElementsByClassName('jetpack_remote_comment');
+                            for (var i = 0; i < commentForms.length; i++) {
+                                commentForms[i].allowTransparency = false;
+                                commentForms[i].scrolling = 'no';
+                            }
+                        });
+          </script>
+          <!--<![endif]-->
+         </form>
+        </div>
+        <input id="comment_parent" name="comment_parent" type="hidden" value=""/>
+       </section>
+      </article>
+     </main>
+     <!-- .main -->
+    </div>
+    <!-- .content -->
+   </div>
+  </div>
+  <!-- .wrap -->
+  <div class="footer-sidebar">
+   <div class="container">
+    <section class="widget_text widget custom_html-2 widget_custom_html">
+     <div class="textwidget custom-html-widget">
+      <!-- Global site tag (gtag.js) - Google Analytics -->
+      <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-131367309-1">
+      </script>
+      <script>
+       window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-131367309-1');
+      </script>
+     </div>
+    </section>
+   </div>
+  </div>
+  <!-- .footer-sidebar -->
+  <footer class="footer-info">
+   <div class="container">
+    © 2020 www.zhujishu.com
+   </div>
+  </footer>
+  <!-- .footer-info -->
+  <script type="text/javascript">
+   window.WPCOM_sharing_counts = {"https:\/\/www.zhujishu.com\/vpsshadowsocks%e6%90%ad%e5%bb%bavpn%e6%9c%8d%e5%8a%a1%e5%99%a8%ef%bc%88%e8%b6%85%e7%ae%80%e5%8d%95%ef%bc%89.html":150};
+  </script>
+  <script src="https://www.zhujishu.com/wp-content/plugins/jetpack/_inc/build/postmessage.min.js?ver=8.7" type="text/javascript">
+  </script>
+  <script src="https://www.zhujishu.com/wp-content/plugins/jetpack/_inc/build/jquery.jetpack-resize.min.js?ver=8.7" type="text/javascript">
+  </script>
+  <script src="https://www.zhujishu.com/wp-content/plugins/jetpack/modules/likes/queuehandler.js?ver=8.7" type="text/javascript">
+  </script>
+  <script src="https://www.zhujishu.com/wp-includes/js/comment-reply.min.js?ver=5.4.2" type="text/javascript">
+  </script>
+  <script src="https://www.zhujishu.com/wp-content/themes/mediumm/dist/scripts/main.js" type="text/javascript">
+  </script>
+  <script src="https://www.zhujishu.com/wp-includes/js/wp-embed.min.js?ver=5.4.2" type="text/javascript">
+  </script>
+  <script async="async" src="https://www.zhujishu.com/wp-content/plugins/akismet/_inc/form.js?ver=4.1.6" type="text/javascript">
+  </script>
+  <script type="text/javascript">
+   /* <![CDATA[ */
+var sharing_js_options = {"lang":"en","counts":"1","is_stats_active":"1"};
+/* ]]> */
+  </script>
+  <script src="https://www.zhujishu.com/wp-content/plugins/jetpack/_inc/build/sharedaddy/sharing.min.js?ver=8.7" type="text/javascript">
+  </script>
+  <script type="text/javascript">
+   var windowOpen;
+            jQuery( document.body ).on( 'click', 'a.share-twitter', function() {
+                // If there's another sharing window open, close it.
+                if ( 'undefined' !== typeof windowOpen ) {
+                    windowOpen.close();
+                }
+                windowOpen = window.open( jQuery( this ).attr( 'href' ), 'wpcomtwitter', 'menubar=1,resizable=1,width=600,height=350' );
+                return false;
+            });
+var windowOpen;
+            jQuery( document.body ).on( 'click', 'a.share-facebook', function() {
+                // If there's another sharing window open, close it.
+                if ( 'undefined' !== typeof windowOpen ) {
+                    windowOpen.close();
+                }
+                windowOpen = window.open( jQuery( this ).attr( 'href' ), 'wpcomfacebook', 'menubar=1,resizable=1,width=600,height=400' );
+                return false;
+            });
+  </script>
+  <iframe id="likes-master" name="likes-master" scrolling="no" src="https://widgets.wp.com/likes/master.html?ver=202028#ver=202028&amp;lang=zh-cn" style="display:none;">
+  </iframe>
+  <div id="likes-other-gravatars">
+   <div class="likes-text">
+    <span>
+     %d
+    </span>
+    博主赞过：
+   </div>
+   <ul class="wpl-avatars sd-like-gravatars">
+   </ul>
+  </div>
+  <!--[if IE]>
+        <script type="text/javascript">
+            if ( 0 === window.location.hash.indexOf( '#comment-' ) ) {
+                // window.location.reload() doesn't respect the Hash in IE
+                window.location.hash = window.location.hash;
+            }
+        </script>
+        <![endif]-->
+  <script type="text/javascript">
+   (function () {
+                var comm_par_el = document.getElementById( 'comment_parent' ),
+                    comm_par = ( comm_par_el && comm_par_el.value ) ? comm_par_el.value : '',
+                    frame = document.getElementById( 'jetpack_remote_comment' ),
+                    tellFrameNewParent;
+
+                tellFrameNewParent = function () {
+                    if ( comm_par ) {
+                        frame.src = "https://jetpack.wordpress.com/jetpack-comment/?blogid=173833033&postid=150&comment_registration=0&require_name_email=1&stc_enabled=0&stb_enabled=0&show_avatars=1&avatar_default=blank&greeting=%E5%8F%91%E8%A1%A8%E8%AF%84%E8%AE%BA&greeting_reply=%E4%B8%BA+%25s+%E5%8F%91%E8%A1%A8%E8%AF%84%E8%AE%BA&color_scheme=light&lang=zh_CN&jetpack_version=8.7&show_cookie_consent=10&has_cookie_consent=0&token_key=%3Bnormal%3B&sig=c463ad6b3ec5e8510c5ecdf61b791ddddf67ae79#parent=https%3A%2F%2Fwww.zhujishu.com%2Fvpsshadowsocks%25E6%2590%25AD%25E5%25BB%25BAvpn%25E6%259C%258D%25E5%258A%25A1%25E5%2599%25A8%25EF%25BC%2588%25E8%25B6%2585%25E7%25AE%2580%25E5%258D%2595%25EF%25BC%2589.html" + '&replytocom=' + parseInt( comm_par, 10 ).toString();
+                    } else {
+                        frame.src = "https://jetpack.wordpress.com/jetpack-comment/?blogid=173833033&postid=150&comment_registration=0&require_name_email=1&stc_enabled=0&stb_enabled=0&show_avatars=1&avatar_default=blank&greeting=%E5%8F%91%E8%A1%A8%E8%AF%84%E8%AE%BA&greeting_reply=%E4%B8%BA+%25s+%E5%8F%91%E8%A1%A8%E8%AF%84%E8%AE%BA&color_scheme=light&lang=zh_CN&jetpack_version=8.7&show_cookie_consent=10&has_cookie_consent=0&token_key=%3Bnormal%3B&sig=c463ad6b3ec5e8510c5ecdf61b791ddddf67ae79#parent=https%3A%2F%2Fwww.zhujishu.com%2Fvpsshadowsocks%25E6%2590%25AD%25E5%25BB%25BAvpn%25E6%259C%258D%25E5%258A%25A1%25E5%2599%25A8%25EF%25BC%2588%25E8%25B6%2585%25E7%25AE%2580%25E5%258D%2595%25EF%25BC%2589.html";
+                    }
+                };
+
+                
+                if ( 'undefined' !== typeof addComment ) {
+                    addComment._Jetpack_moveForm = addComment.moveForm;
+
+                    addComment.moveForm = function ( commId, parentId, respondId, postId ) {
+                        var returnValue = addComment._Jetpack_moveForm( commId, parentId, respondId, postId ),
+                            cancelClick, cancel;
+
+                        if ( false === returnValue ) {
+                            cancel = document.getElementById( 'cancel-comment-reply-link' );
+                            cancelClick = cancel.onclick;
+                            cancel.onclick = function () {
+                                var cancelReturn = cancelClick.call( this );
+                                if ( false !== cancelReturn ) {
+                                    return cancelReturn;
+                                }
+
+                                if ( ! comm_par ) {
+                                    return cancelReturn;
+                                }
+
+                                comm_par = 0;
+
+                                tellFrameNewParent();
+
+                                return cancelReturn;
+                            };
+                        }
+
+                        if ( comm_par == parentId ) {
+                            return returnValue;
+                        }
+
+                        comm_par = parentId;
+
+                        tellFrameNewParent();
+
+                        return returnValue;
+                    };
+                }
+
+                
+                // Do the post message bit after the dom has loaded.
+                document.addEventListener( 'DOMContentLoaded', function () {
+                    var iframe_url = "https:\/\/jetpack.wordpress.com";
+                    if ( window.postMessage ) {
+                        if ( document.addEventListener ) {
+                            window.addEventListener( 'message', function ( event ) {
+                                var origin = event.origin.replace( /^http:\/\//i, 'https://' );
+                                if ( iframe_url.replace( /^http:\/\//i, 'https://' ) !== origin ) {
+                                    return;
+                                }
+                                jQuery( frame ).height( event.data );
+                            });
+                        } else if ( document.attachEvent ) {
+                            window.attachEvent( 'message', function ( event ) {
+                                var origin = event.origin.replace( /^http:\/\//i, 'https://' );
+                                if ( iframe_url.replace( /^http:\/\//i, 'https://' ) !== origin ) {
+                                    return;
+                                }
+                                jQuery( frame ).height( event.data );
+                            });
+                        }
+                    }
+                })
+
+            })();
+  </script>
+  <script async="async" defer="defer" src="https://stats.wp.com/e-202028.js" type="text/javascript">
+  </script>
+  <script type="text/javascript">
+   _stq = window._stq || [];
+    _stq.push([ 'view', {v:'ext',j:'1:8.7',blog:'173833033',post:'150',tz:'8',srv:'www.zhujishu.com'} ]);
+    _stq.push([ 'clickTrackerInit', '173833033', '150' ]);
+  </script>
+ </body>
+</html>
